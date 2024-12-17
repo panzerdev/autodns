@@ -10,12 +10,12 @@ import (
 // checkZone servers as a check if the zone exists and returns the required data
 // (origin and nameserver to retrieve the actual zone).
 func (p *Provider) checkZone(ctx context.Context, zone string) (*ResponseSearchItem, error) {
-	zzone := strings.TrimSuffix(zone, ".")
+	zone = strings.TrimSuffix(zone, ".")
 
 	filter := map[string]string{
 		"key":      "name",
 		"operator": "EQUAL",
-		"value":    zzone,
+		"value":    zone,
 	}
 
 	payload := map[string][]map[string]string{}
@@ -39,7 +39,7 @@ func (p *Provider) checkZone(ctx context.Context, zone string) (*ResponseSearchI
 	}
 
 	if len(result.Data) == 0 {
-		return nil, fmt.Errorf("checkZone: %q not found", zzone)
+		return nil, fmt.Errorf("checkZone: %q not found", zone)
 	}
 
 	return &result.Data[0], nil
@@ -47,10 +47,8 @@ func (p *Provider) checkZone(ctx context.Context, zone string) (*ResponseSearchI
 
 // getZone returns the zone.
 func (p *Provider) getZone(ctx context.Context, origin, nameserver, zone string) (*ResponseZone, error) {
-	zzone := strings.TrimSuffix(zone, ".")
-
 	req, err := p.buildRequest(ctx, http.MethodGet, p.buildURL("zone/"+origin+"/"+nameserver), RequestZone{
-		Domain: zzone,
+		Domain: zone,
 	})
 	if err != nil {
 		return nil, err
@@ -75,7 +73,7 @@ func (p *Provider) getZone(ctx context.Context, origin, nameserver, zone string)
 	}
 
 	if len(result.Data) == 0 {
-		return nil, fmt.Errorf("getZone: could not find %q", zzone)
+		return nil, fmt.Errorf("getZone: could not find %q", zone)
 	}
 
 	if len(result.Data) != 1 {
