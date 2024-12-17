@@ -1,4 +1,4 @@
-module github.com/libdns/autodns
+module github.com/panzerdev/autodns
 
 go 1.21
 
