@@ -60,7 +60,7 @@ func (p *Provider) getAutoDNSContext() string {
 func (p *Provider) makeRequest(req *http.Request) (*http.Response, error) {
 	var client *http.Client
 	if p.HttpClient == nil {
-		client = p.HttpClient
+		client = &http.Client{}
 	} else {
 		client = p.HttpClient
 	}
